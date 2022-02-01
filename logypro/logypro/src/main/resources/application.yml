@@ -1,6 +1,8 @@
 specifier:
-  defaultSpecifications:
+  signatureSpecifications:
     -public
     -static
   annotationSpecifications:
     -Override
+  specificationTypes:
+    -signatureSpecifications

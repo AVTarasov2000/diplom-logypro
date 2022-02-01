@@ -1,4 +1,4 @@
-package ru.vsu.diplom.service.specifications;
+package ru.vsu.diplom.service.specification;
 
 @FunctionalInterface
 public interface Specification<T> {

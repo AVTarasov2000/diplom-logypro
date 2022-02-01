@@ -8,6 +8,7 @@ import java.util.List;
 @Component
 @ConfigurationProperties(prefix = "specifier")
 public class SpecifierProperties {
-    List<String> defaultSpecifications;
+    List<String> signatureSpecifications;
     List<String> annotationSpecifications;
+    List<String> specificationTypes;
 }
