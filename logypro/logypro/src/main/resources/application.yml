@@ -1,0 +1,6 @@
+specifier:
+  defaultSpecifications:
+    -public
+    -static
+  annotationSpecifications:
+    -Override
