@@ -1,4 +1,4 @@
-package ru.vsu.diplom.annotations;
+package ru.vsu.diplom.annotation;
 
 public @interface SpecificationType {
     String name();

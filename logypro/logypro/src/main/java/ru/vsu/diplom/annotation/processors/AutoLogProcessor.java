@@ -1,4 +1,4 @@
-package ru.vsu.diplom.processors;
+package ru.vsu.diplom.annotation.processors;
 
 import com.google.auto.service.AutoService;
 

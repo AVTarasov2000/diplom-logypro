@@ -1,11 +1,11 @@
-package ru.vsu.diplom.service.specifications;
+package ru.vsu.diplom.service.container;
 
 import org.springframework.stereotype.Component;
-import ru.vsu.diplom.annotations.SpecificationType;
+import ru.vsu.diplom.annotation.SpecificationContainer;
 
 import java.lang.annotation.ElementType;
 
 @Component
-@SpecificationType(name = "signatureSpecifications")
+@SpecificationContainer(name = "signatureSpecifications")
 public class SignatureSpecifications extends SpecificationsContainer <String, ElementType> {
 }

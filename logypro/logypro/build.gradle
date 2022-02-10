@@ -20,7 +20,7 @@ dependencies {
     implementation "org.apache.maven.plugins:maven-compiler-plugin:${maven_compiler_plugin_version}"
     implementation group: 'org.springframework', name: 'spring-context', version: '5.3.15'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.6.3'
-
+    implementation 'org.reflections:reflections:0.9.11'
 }
 
 test {

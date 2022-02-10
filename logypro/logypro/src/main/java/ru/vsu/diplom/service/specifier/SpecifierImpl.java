@@ -4,7 +4,7 @@ package ru.vsu.diplom.service.specifier;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.vsu.diplom.properties.SpecifierProperties;
-import ru.vsu.diplom.service.specifications.SpecificationsContainer;
+import ru.vsu.diplom.service.container.SpecificationsContainer;
 
 import javax.lang.model.element.TypeElement;
 import java.util.Map;

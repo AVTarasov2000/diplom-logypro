@@ -2,9 +2,9 @@ package ru.vsu.diplom.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.vsu.diplom.service.specifications.AnnotationSpecifications;
-import ru.vsu.diplom.service.specifications.SignatureSpecifications;
-import ru.vsu.diplom.service.specifications.SpecificationsContainer;
+import ru.vsu.diplom.service.container.AnnotationSpecifications;
+import ru.vsu.diplom.service.container.SignatureSpecifications;
+import ru.vsu.diplom.service.container.SpecificationsContainer;
 
 import java.util.Map;
 

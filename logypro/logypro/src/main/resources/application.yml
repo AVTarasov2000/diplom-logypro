@@ -6,3 +6,6 @@ specifier:
     -Override
   specificationTypes:
     -signatureSpecifications
+
+logypro:
+  package-to-scan: ru.vsu.diplom
