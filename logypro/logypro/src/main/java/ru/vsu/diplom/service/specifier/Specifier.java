@@ -1,5 +1,7 @@
 package ru.vsu.diplom.service.specifier;
 
-public interface Specifier<T> {
-    public boolean specify(T element);
+import javax.lang.model.element.TypeElement;
+
+public interface Specifier {
+    public Boolean specify(TypeElement element);
 }

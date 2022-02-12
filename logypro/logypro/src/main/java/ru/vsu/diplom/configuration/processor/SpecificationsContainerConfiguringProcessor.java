@@ -1,75 +1,67 @@
 package ru.vsu.diplom.configuration.processor;
 
 import lombok.Getter;
-import ru.vsu.diplom.annotation.SpecificationContainer;
 import ru.vsu.diplom.annotation.SpecificationType;
-import ru.vsu.diplom.service.container.SpecificationsContainer;
 import ru.vsu.diplom.service.specification.Specification;
 
 import org.reflections.Reflections;
+
+import javax.lang.model.element.TypeElement;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 public class SpecificationsContainerConfiguringProcessor {
 
     private final String packageToScan;
     @Getter
-    private final Map <String, ? extends SpecificationsContainer> containers;
+    private final Map <String, Specification> configurations;
+
+    public Boolean specify(TypeElement element, BinaryOperator<Boolean> accumulator){
+        return configurations.values().stream()
+                .map(x->x.suit(element))
+                .reduce(accumulator)
+                .orElse(false);
+    }
+
+    public Boolean specifyOr(TypeElement element){
+        return specify(element, (a, b)->a||b);
+    }
+
+    public Boolean specifyAnd(TypeElement element){
+        return specify(element, (a, b)->a&&b);
+    }
+
+    public boolean specify(TypeElement element, String name){
+        return configurations.get(name).suit(element);
+    }
 
     public SpecificationsContainerConfiguringProcessor(String packageToScan) {
         this.packageToScan = packageToScan;
-        containers = containers();
-        setConfigurations(containers);
+        configurations = prepareConfigurations();
     }
 
-    public SpecificationsContainer getContainer(String name){
-        return containers.get(name);
-    }
-
-    private Map <String, ? extends SpecificationsContainer> containers() {
-        Reflections reflections = new Reflections(packageToScan);
-        Set <Class <?>> set = reflections.getTypesAnnotatedWith(SpecificationContainer.class);
-        return set.stream().collect(
-                Collectors.toMap(
-                        this::getSpecificationContainerAnnotation,
-                        x -> (SpecificationsContainer) createInstance(x)
-                ));
-    }
-
-    private void setConfigurations(Map <String, ? extends SpecificationsContainer> containers) {
+    private Map <String, Specification> prepareConfigurations() {
         Reflections reflections = new Reflections(packageToScan);
         Set <Class <?>> set = reflections.getTypesAnnotatedWith(SpecificationType.class);
-
-        set.forEach(x->containers
-                .get(getSpecificationTypeContainerName(x))
-                .addSpecification(getSpecificationTypeKey(x), (Specification) createInstance(x))
-        );
+        return set.stream()
+                .collect(Collectors.toMap(
+                        this::getSpecificationTypeAnnotationName,
+                        this::createInstance));
     }
 
-    private String getSpecificationContainerAnnotation(Class <?> cls) {
-        return Optional.ofNullable(cls.getAnnotation(SpecificationContainer.class))
-                .map(SpecificationContainer::name)
-                .orElseThrow(ClassCastException::new);
-    }
-
-    private String getSpecificationTypeContainerName(Class <?> cls) {
+    private String getSpecificationTypeAnnotationName(Class <?> cls) {
         return Optional.ofNullable(cls.getAnnotation(SpecificationType.class))
-                .map(SpecificationType::containerName)
+                .map(SpecificationType::name)
                 .orElseThrow(ClassCastException::new);
     }
 
-    private String getSpecificationTypeKey(Class <?> cls) {
-        return Optional.ofNullable(cls.getAnnotation(SpecificationType.class))
-                .map(SpecificationType::key)
-                .orElseThrow(ClassCastException::new);
-    }
-
-    private Object createInstance(Class<?> cls){
+    private Specification createInstance(Class<?> cls){
         try {
             cls.getConstructor().setAccessible(true);
-            return cls.newInstance();
+            return (Specification) cls.newInstance();
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException e) {
             e.printStackTrace();
         }

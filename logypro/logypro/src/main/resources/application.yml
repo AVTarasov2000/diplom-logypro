@@ -9,3 +9,4 @@ specifier:
 
 logypro:
   package-to-scan: ru.vsu.diplom
+  connectionTypes: OR

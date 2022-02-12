@@ -1,6 +1,11 @@
-package ru.vsu.diplom.annotation.processors;
+package ru.vsu.diplom.service.processors;
 
 import com.google.auto.service.AutoService;
+import lombok.RequiredArgsConstructor;
+import ru.vsu.diplom.configuration.processor.SpecificationsContainerConfiguringProcessor;
+import ru.vsu.diplom.properties.SpecifierProperties;
+import ru.vsu.diplom.service.specifier.Specifier;
+import ru.vsu.diplom.service.specifier.SpecifierImpl;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.AbstractProcessor;
@@ -19,7 +24,11 @@ import java.util.stream.Collectors;
 @SupportedAnnotationTypes("ru.vsu.diplom.annotations.AutoLog")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @AutoService(Processor.class)
+@RequiredArgsConstructor
 public class AutoLogProcessor extends AbstractProcessor {
+
+    private final Specifier specifier;
+
     @Override
     public boolean process(Set <? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         for (TypeElement annotation : annotations) {
@@ -32,6 +41,8 @@ public class AutoLogProcessor extends AbstractProcessor {
 
             List<Element> setters = annotatedMethods.get(true);
             List<Element> otherMethods = annotatedMethods.get(false);
+
+//            specifier.specify(); //todo специфировать
         }
         return true;
     }
