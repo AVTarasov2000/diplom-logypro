@@ -1,35 +1,44 @@
 package ru.vsu.diplom.configuration.processor;
 
-import org.reflections.Reflections;
+import lombok.Getter;
 import ru.vsu.diplom.annotation.SpecificationContainer;
 import ru.vsu.diplom.annotation.SpecificationType;
 import ru.vsu.diplom.service.container.SpecificationsContainer;
 import ru.vsu.diplom.service.specification.Specification;
 
+import org.reflections.Reflections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class SpecificationsProcessor {
+public class SpecificationsContainerConfiguringProcessor {
 
-    String packageToScan;
+    private final String packageToScan;
+    @Getter
+    private final Map <String, ? extends SpecificationsContainer> containers;
 
-    public SpecificationsProcessor(String packageToScan) {
+    public SpecificationsContainerConfiguringProcessor(String packageToScan) {
         this.packageToScan = packageToScan;
+        containers = containers();
+        setConfigurations(containers);
     }
 
-    public Map <String, SpecificationsContainer> containers() {
+    public SpecificationsContainer getContainer(String name){
+        return containers.get(name);
+    }
+
+    private Map <String, ? extends SpecificationsContainer> containers() {
         Reflections reflections = new Reflections(packageToScan);
         Set <Class <?>> set = reflections.getTypesAnnotatedWith(SpecificationContainer.class);
-        return setConfigurations(set.stream().collect(
+        return set.stream().collect(
                 Collectors.toMap(
                         this::getSpecificationContainerAnnotation,
                         x -> (SpecificationsContainer) createInstance(x)
-                )));
+                ));
     }
 
-    public Map <String, SpecificationsContainer> setConfigurations(Map <String, SpecificationsContainer> containers) {
+    private void setConfigurations(Map <String, ? extends SpecificationsContainer> containers) {
         Reflections reflections = new Reflections(packageToScan);
         Set <Class <?>> set = reflections.getTypesAnnotatedWith(SpecificationType.class);
 
@@ -37,7 +46,6 @@ public class SpecificationsProcessor {
                 .get(getSpecificationTypeContainerName(x))
                 .addSpecification(getSpecificationTypeKey(x), (Specification) createInstance(x))
         );
-        return containers;
     }
 
     private String getSpecificationContainerAnnotation(Class <?> cls) {
@@ -60,11 +68,11 @@ public class SpecificationsProcessor {
 
     private Object createInstance(Class<?> cls){
         try {
+            cls.getConstructor().setAccessible(true);
             return cls.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException e) {
             e.printStackTrace();
         }
         throw new ClassCastException();
     }
-
 }
