@@ -1,15 +1,17 @@
 package ru.vsu.diplom.properties;
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
-@Component
-@ConfigurationProperties(prefix = "specifier")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class SpecifierProperties {
-    List<String> specificationTypes;
-    String connectionTypes;
+    private List<String> specificationTypes;
+    private String connectionType;
 }
