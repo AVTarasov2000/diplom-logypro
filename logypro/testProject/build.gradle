@@ -10,13 +10,20 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
     implementation group: 'org.springframework', name: 'spring-context', version: '5.3.15'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.6.3'
     compile project(":logypro")
+    annotationProcessor project(":logypro")
+//    annotationProcessor files('/Users/andrejtarasov/Desktop/diplom/logypro/logypro/build/libs/logypro-1.0-SNAPSHOT.jar')
+//    implementation files('/Users/andrejtarasov/Desktop/diplom/logypro/logypro/build/libs/logypro-1.0-SNAPSHOT.jar')
 }
 
 test {
     useJUnitPlatform()
 }
+
+jar{
+    manifest.attributes("Main-Class": "logypro/testProject/src/main/java/TestApplication.java");
+}
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
