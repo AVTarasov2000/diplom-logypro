@@ -7,6 +7,7 @@ import ru.vsu.diplom.properties.SpecifierProperties;
 import static ru.vsu.diplom.service.utils.OperatorUtils.getOperator;
 
 import javax.lang.model.element.TypeElement;
+import java.util.Objects;
 import java.util.function.BinaryOperator;
 
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class SpecifierImpl implements Specifier {
     public Boolean specify(TypeElement element) {
         BinaryOperator<Boolean> operator = getOperator(properties.getConnectionType());
         return properties.getSpecificationTypes().stream()
+                .filter(Objects::nonNull)
                 .map(s -> specificationsContainerConfiguringProcessor.specify(element, s))
                 .reduce(operator)
                 .orElse(false);

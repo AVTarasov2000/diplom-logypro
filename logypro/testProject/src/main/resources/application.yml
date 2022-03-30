@@ -8,5 +8,6 @@ specifier:
     -signatureSpecifications
 
 logypro:
-  package-to-scan: ru.vsu.diplom
+  specificationTypes: test
+  package-to-scan: ru.vsu.test
   connectionTypes: OR

@@ -7,8 +7,8 @@ import ru.vsu.diplom.service.specification.Specification;
 import org.reflections.Reflections;
 
 import javax.lang.model.element.TypeElement;
-import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BinaryOperator;
@@ -22,6 +22,7 @@ public class SpecificationsContainerConfiguringProcessor {
 
     public Boolean specify(TypeElement element, BinaryOperator <Boolean> accumulator) {
         return configurations.values().stream()
+                .filter(Objects::nonNull)
                 .map(x -> x.suit(element))
                 .reduce(accumulator)
                 .orElse(false);
@@ -36,6 +37,9 @@ public class SpecificationsContainerConfiguringProcessor {
     }
 
     public boolean specify(TypeElement element, String name) {
+        if(!configurations.containsKey(name)){
+            throw new IllegalArgumentException("нет класса со значением " + name);
+        }
         return configurations.get(name).suit(element);
     }
 
