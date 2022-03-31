@@ -8,8 +8,8 @@ public class TestAutolog {
 
     }
 
-    protected Integer test(String[] args) {
-        System.out.println("");
+    protected Integer test(String arg) {
+        System.out.println(arg);
         return 1;
     }
     public void test1(String[] args) {

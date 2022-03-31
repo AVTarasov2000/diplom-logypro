@@ -43,14 +43,16 @@ public class SpecificationsContainerConfiguringProcessor {
 
     public boolean specify(TypeElement element, String name) {
         if(!configurations.containsKey(name)){
-            throw new IllegalArgumentException("нет класса со значением " + name);
+            return false;
+//            throw new IllegalArgumentException("нет класса со значением " + name);
         }
         return configurations.get(name).suit(element);
     }
 
     public boolean specify(ExecutableElement element, String name) {
         if(!configurations.containsKey(name)){
-            throw new IllegalArgumentException("нет класса со значением " + name);
+            return false;
+//            throw new IllegalArgumentException("нет класса со значением " + name);
         }
         return configurationsFunc.get(name).suit(element);
     }

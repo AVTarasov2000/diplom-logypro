@@ -15,6 +15,7 @@ import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -35,7 +36,7 @@ public class AutoLogProcessor extends AbstractProcessor {
 //        List<String> specificationTypes = Collections.singletonList("test");
 //        String packageToScan = System.getProperty("logypro.package-to-scan");
 //        String connectionType = System.getProperty("logypro.connectionTypes");
-        List <String> specificationTypes = Collections.singletonList("test");
+        List <String> specificationTypes = Arrays.asList("test","publicFunc");
         String packageToScan = "ru.vsu.diplom";
         String connectionType = "OR";
         specifier = new SpecifierImpl(

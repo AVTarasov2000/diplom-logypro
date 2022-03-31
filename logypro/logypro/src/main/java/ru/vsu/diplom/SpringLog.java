@@ -8,7 +8,7 @@ public class SpringLog extends Logging {
 
     @Override
     public String loggingText(String loggingText) {
-        return "logger.debug(" + loggingText + ");";
+        return "logger.error(" + loggingText + ");";
     }
 
     @Override
