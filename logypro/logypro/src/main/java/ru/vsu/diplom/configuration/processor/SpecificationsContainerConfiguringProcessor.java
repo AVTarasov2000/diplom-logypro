@@ -1,7 +1,9 @@
 package ru.vsu.diplom.configuration.processor;
 
 import lombok.Getter;
+import ru.vsu.diplom.annotation.LoggingType;
 import ru.vsu.diplom.annotation.SpecificationType;
+import ru.vsu.diplom.service.logging.Logging;
 import ru.vsu.diplom.service.specification.Specification;
 
 import org.reflections.Reflections;
@@ -9,10 +11,7 @@ import ru.vsu.diplom.service.specification.SpecificationFunc;
 
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
@@ -23,6 +22,8 @@ public class SpecificationsContainerConfiguringProcessor {
     private final Map <String, Specification> configurations;
     @Getter
     private final Map <String, SpecificationFunc> configurationsFunc;
+    @Getter
+    private final List <Logging> loging;
 
     public Boolean specify(TypeElement element, BinaryOperator <Boolean> accumulator) {
         return configurations.values().stream()
@@ -58,6 +59,14 @@ public class SpecificationsContainerConfiguringProcessor {
         this.reflections = new Reflections(packageToScan);
         configurations = prepareConfigurations();
         configurationsFunc = prepareConfigurationsFunc();
+        loging = prepareLoging();
+    }
+
+    private List<Logging> prepareLoging() {
+        Set <Class <?>> set = reflections.getTypesAnnotatedWith(LoggingType.class);
+        return set.stream()
+                .map(this::createLogInstance)
+                .collect(Collectors.toList());
     }
 
     private Map <String, Specification> prepareConfigurations() {
@@ -100,6 +109,16 @@ public class SpecificationsContainerConfiguringProcessor {
         try {
             cls.getConstructor().setAccessible(true);
             return (SpecificationFunc) cls.newInstance();
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        throw new ClassCastException();
+    }
+
+    private Logging createLogInstance(Class <?> cls) {
+        try {
+            cls.getConstructor().setAccessible(true);
+            return (Logging) cls.newInstance();
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException e) {
             e.printStackTrace();
         }

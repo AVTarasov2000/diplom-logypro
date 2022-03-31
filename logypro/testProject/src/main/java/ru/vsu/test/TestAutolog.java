@@ -8,16 +8,18 @@ public class TestAutolog {
 
     }
 
-    public int test(String[] args) {
+    protected Integer test(String[] args) {
         System.out.println("");
         return 1;
     }
     public void test1(String[] args) {
 
     }
-    protected void test2() {
+    protected Integer test2(String[] args, Integer abdya) {
 
+        return abdya;
     }
+
     private void test3(String[] args, Integer abdya) {
 
     }

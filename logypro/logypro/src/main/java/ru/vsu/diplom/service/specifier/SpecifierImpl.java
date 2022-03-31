@@ -4,10 +4,13 @@ package ru.vsu.diplom.service.specifier;
 import lombok.RequiredArgsConstructor;
 import ru.vsu.diplom.configuration.processor.SpecificationsContainerConfiguringProcessor;
 import ru.vsu.diplom.properties.SpecifierProperties;
+import ru.vsu.diplom.service.logging.Logging;
+
 import static ru.vsu.diplom.service.utils.OperatorUtils.getOperator;
 
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.BinaryOperator;
 
@@ -35,5 +38,10 @@ public class SpecifierImpl implements Specifier {
                 .map(s -> specificationsContainerConfiguringProcessor.specify(element, s))
                 .reduce(operator)
                 .orElse(false);
+    }
+
+    @Override
+    public List <Logging> getLogging() {
+        return specificationsContainerConfiguringProcessor.getLoging();
     }
 }
