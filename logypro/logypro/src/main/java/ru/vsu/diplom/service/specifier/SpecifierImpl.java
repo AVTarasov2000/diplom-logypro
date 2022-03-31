@@ -6,6 +6,7 @@ import ru.vsu.diplom.configuration.processor.SpecificationsContainerConfiguringP
 import ru.vsu.diplom.properties.SpecifierProperties;
 import static ru.vsu.diplom.service.utils.OperatorUtils.getOperator;
 
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import java.util.Objects;
 import java.util.function.BinaryOperator;
@@ -18,6 +19,16 @@ public class SpecifierImpl implements Specifier {
 
     @Override
     public Boolean specify(TypeElement element) {
+        BinaryOperator<Boolean> operator = getOperator(properties.getConnectionType());
+        return properties.getSpecificationTypes().stream()
+                .filter(Objects::nonNull)
+                .map(s -> specificationsContainerConfiguringProcessor.specify(element, s))
+                .reduce(operator)
+                .orElse(false);
+    }
+
+    @Override
+    public Boolean specify(ExecutableElement element) {
         BinaryOperator<Boolean> operator = getOperator(properties.getConnectionType());
         return properties.getSpecificationTypes().stream()
                 .filter(Objects::nonNull)

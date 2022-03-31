@@ -78,7 +78,7 @@ public class AutoLogProcessor extends AbstractProcessor {
     }
 
     private String printFunc(ExecutableElement element) {
-        if (element.getKind().equals(ElementKind.CONSTRUCTOR)) {
+        if (!specifier.specify(element)) {
             return "";
         }
         StringBuilder sb = new StringBuilder();

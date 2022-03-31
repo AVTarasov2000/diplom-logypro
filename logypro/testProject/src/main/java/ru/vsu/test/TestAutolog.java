@@ -4,7 +4,7 @@ import ru.vsu.diplom.service.processors.AutoLog;
 
 @AutoLog()
 public class TestAutolog {
-    public TestAutolog() {
+    TestAutolog() {
 
     }
 
@@ -15,10 +15,13 @@ public class TestAutolog {
     public void test1(String[] args) {
 
     }
-    public void test2() {
+    protected void test2() {
 
     }
-    public void test3(String[] args, Integer abdya) {
+    private void test3(String[] args, Integer abdya) {
+
+    }
+    void test4(String[] args, Integer abdya) {
 
     }
 }

@@ -5,7 +5,9 @@ import ru.vsu.diplom.annotation.SpecificationType;
 import ru.vsu.diplom.service.specification.Specification;
 
 import org.reflections.Reflections;
+import ru.vsu.diplom.service.specification.SpecificationFunc;
 
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import java.util.Map;
 import java.util.Objects;
@@ -19,6 +21,8 @@ public class SpecificationsContainerConfiguringProcessor {
     private final Reflections reflections;
     @Getter
     private final Map <String, Specification> configurations;
+    @Getter
+    private final Map <String, SpecificationFunc> configurationsFunc;
 
     public Boolean specify(TypeElement element, BinaryOperator <Boolean> accumulator) {
         return configurations.values().stream()
@@ -43,9 +47,17 @@ public class SpecificationsContainerConfiguringProcessor {
         return configurations.get(name).suit(element);
     }
 
+    public boolean specify(ExecutableElement element, String name) {
+        if(!configurations.containsKey(name)){
+            throw new IllegalArgumentException("нет класса со значением " + name);
+        }
+        return configurationsFunc.get(name).suit(element);
+    }
+
     public SpecificationsContainerConfiguringProcessor(String packageToScan) {
         this.reflections = new Reflections(packageToScan);
         configurations = prepareConfigurations();
+        configurationsFunc = prepareConfigurationsFunc();
     }
 
     private Map <String, Specification> prepareConfigurations() {
@@ -55,9 +67,22 @@ public class SpecificationsContainerConfiguringProcessor {
                 this::createInstance));
     }
 
+    private Map <String, SpecificationFunc> prepareConfigurationsFunc() {
+        Set <Class <?>> set = reflections.getTypesAnnotatedWith(ru.vsu.diplom.annotation.SpecificationFunc.class);
+        return set.stream().collect(Collectors.toMap(
+                this::getSpecificationFuncAnnotationName,
+                this::createFuncSpecInstance));
+    }
+
     private String getSpecificationTypeAnnotationName(Class <?> cls) {
         return Optional.ofNullable(cls.getAnnotation(SpecificationType.class))
                 .map(SpecificationType::name)
+                .orElseThrow(ClassCastException::new);
+    }
+
+    private String getSpecificationFuncAnnotationName(Class <?> cls) {
+        return Optional.ofNullable(cls.getAnnotation(ru.vsu.diplom.annotation.SpecificationFunc.class))
+                .map(ru.vsu.diplom.annotation.SpecificationFunc::name)
                 .orElseThrow(ClassCastException::new);
     }
 
@@ -65,6 +90,16 @@ public class SpecificationsContainerConfiguringProcessor {
         try {
             cls.getConstructor().setAccessible(true);
             return (Specification) cls.newInstance();
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        throw new ClassCastException();
+    }
+
+    private SpecificationFunc createFuncSpecInstance(Class <?> cls) {
+        try {
+            cls.getConstructor().setAccessible(true);
+            return (SpecificationFunc) cls.newInstance();
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException e) {
             e.printStackTrace();
         }
