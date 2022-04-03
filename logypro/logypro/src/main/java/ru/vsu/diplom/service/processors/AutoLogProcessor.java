@@ -15,10 +15,7 @@ import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -27,6 +24,8 @@ import java.util.stream.Collectors;
 public class AutoLogProcessor extends AbstractProcessor {
 
     private static final String VAR_NAME = "temp";
+
+    private final Map<TypeElement, ClassVisitor> mVisitors = new HashMap <>();
 
     private Specifier specifier;
     private ProcessingEnvironment processingEnv;
@@ -56,6 +55,15 @@ public class AutoLogProcessor extends AbstractProcessor {
                     .filter(specifier::specify)
                     .collect(Collectors.toList());
             matched.forEach(x -> System.out.println(x.getSimpleName()));
+
+            for (final TypeElement element : matched) {
+                ClassVisitor visitor = mVisitors.get(element);
+                if (visitor == null) {
+                    visitor = new ClassVisitor(processingEnv, element);
+                    mVisitors.put(element, visitor);
+                }
+                element.accept(visitor, null);
+            }
 
             for (TypeElement typeElement : matched) {
                 try {

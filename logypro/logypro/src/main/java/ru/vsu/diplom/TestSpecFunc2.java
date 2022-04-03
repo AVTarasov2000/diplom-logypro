@@ -9,6 +9,7 @@ import javax.lang.model.element.Modifier;
 public class TestSpecFunc2 extends ru.vsu.diplom.service.specification.SpecificationFunc {
     @Override
     public boolean suit(ExecutableElement element) {
-        return element.getModifiers().contains(Modifier.PUBLIC);
+        return true;
+//        return element.getModifiers().contains(Modifier.PUBLIC);
     }
 }

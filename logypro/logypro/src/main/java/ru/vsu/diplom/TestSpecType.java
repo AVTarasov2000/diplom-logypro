@@ -10,6 +10,7 @@ import javax.lang.model.element.TypeElement;
 public class TestSpecType extends Specification {
     @Override
     public boolean suit(TypeElement element) {
-        return element.getModifiers().contains(Modifier.PUBLIC);
+        return true;
+//        return element.getModifiers().contains(Modifier.PUBLIC);
     }
 }

@@ -10,10 +10,11 @@ public class TestAutolog {
 
     protected Integer test(String arg) {
         System.out.println(arg);
-        return 1;
+        return 10658143;
     }
-    public void test1(String[] args) {
-
+    public void test1(String args) {
+        TestAutolog testAutolog = new TestAutolog();
+        testAutolog.test(args);
     }
     protected Integer test2(String[] args, Integer abdya) {
 
